@@ -1,0 +1,15 @@
+{
+    "sensitive-data": {
+        "element": "property",
+        "description": {
+            "linked-to": {
+                "object": "node",
+                "label": "User"
+            },
+            "list": true,
+            "key": "hobbies",
+            "value": "politics",
+            "type": "value"
+        }
+    }
+}

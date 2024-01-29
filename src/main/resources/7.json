@@ -1,0 +1,16 @@
+{
+    "sensitive-data": {
+        "element": "label",
+        "description": {
+            "label": "Eterosexual",
+            "linked-to": {
+                "labels": [
+                    "Eterosexual",
+                    "Person"
+                ],
+                "multiple-labels": true,
+                "object": "node"
+            }
+        }
+    }
+}

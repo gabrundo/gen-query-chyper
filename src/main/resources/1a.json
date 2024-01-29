@@ -1,0 +1,15 @@
+{
+    "sensitive-data": {
+        "element": "property",
+        "description": {
+            "linked-to": {
+                "label": "User",
+                "object": "node"
+            },
+            "list": false,
+            "key": "password",
+            "value": "12345",
+            "type": "value"
+        }
+    }
+}

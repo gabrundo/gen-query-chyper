@@ -1,0 +1,16 @@
+{
+    "sensitive-data": {
+        "element": "relationship",
+        "description": {
+            "label": "WORSHIP",
+            "start": {
+                "label": "Person",
+                "object": "node"
+            },
+            "end": {
+                "label": "Religion",
+                "object": "node"
+            }
+        }
+    }
+}

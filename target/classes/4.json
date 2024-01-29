@@ -1,0 +1,23 @@
+{
+    "sensitive-data": {
+        "element": "property",
+        "description": {
+            "linked-to": {
+                "label": "FRIEND_OF",
+                "object": "relationship",
+                "start": {
+                    "label": "Person",
+                    "object": "node"
+                },
+                "end": {
+                    "label": "Person",
+                    "object": "node"
+                }
+            },
+            "list": true,
+            "key": "bond",
+            "value": "politics",
+            "type": "value"
+        }
+    }
+}
