@@ -7,14 +7,19 @@ import java.io.InputStreamReader;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /*
- * OVERVIEW: Classe con il compito di ottenere l'oggetto JSON dato il nome del file
+ * OVERVIEW: Classe con il compito di ottenere i JSONObject che formano i dati sensibili di un'istanza di dati
  */
-public class JsonReader {
+public class JsonReader implements Iterable<JSONObject> {
     private final Path file;
     private JSONObject jObject;
 
@@ -33,11 +38,21 @@ public class JsonReader {
         jObject = new JSONObject(sb.toString());
     }
 
-    public final JSONObject getSensitiveData() throws JSONException {
-        return jObject.getJSONObject("sensitive-data");
+    @Override
+    public Iterator<JSONObject> iterator() {
+        List<JSONObject> coll = new ArrayList<>();
+        String sensKey = "sensitive-data";
+
+        JSONArray sensibleArray = jObject.optJSONArray(sensKey);
+        if (sensibleArray != null) {
+            System.out.println("Dato sensibile formato da un array");
+            for (int i = 0; i < sensibleArray.length(); i++) {
+                coll.add(sensibleArray.getJSONObject(i));
+            }
+        } else {
+            coll.add(jObject.getJSONObject(sensKey));
+        }
+        return Collections.unmodifiableCollection(coll).iterator();
+
     }
-
-    // TODO: Aggiungere un metodo che permette di capire se il dato sensibile è
-    // formato da un array di oggetti
-
 }
