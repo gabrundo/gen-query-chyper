@@ -8,17 +8,20 @@ import org.json.JSONObject;
 public class App {
     public static void main(String[] args) {
         try {
-            JsonReader reader = new JsonReader("8.json");
+            JsonReader reader = new JsonReader("2.json");
 
-            for (JSONObject jsonObject : reader) {
-                // System.out.println(jsonObject.toString());
+            for (JSONObject sensitveData : reader) {
+                ElementGenerator relationshipGen = new RelationshipGenerator();
+                ElementGenerator labelGen = new LabelGenerator();
+                ElementGenerator propertyGen = new PropertyGenerator();
 
-                ElementIdentifier relationshipIdentifier = new RelationshipIdentifier(jsonObject, null);
-                ElementIdentifier labelIdentifier = new LabelIdentifier(jsonObject, relationshipIdentifier);
-                ElementIdentifier propertyIdentifier = new PropertyIdentifier(jsonObject, labelIdentifier);
+                propertyGen.setNext(labelGen);
+                labelGen.setNext(relationshipGen);
 
-                propertyIdentifier.identify();
+                String query = propertyGen.generateQuery(sensitveData);
 
+                System.out.println("Query da eseguire:");
+                System.out.println(query);
             }
 
         } catch (IOException x) {

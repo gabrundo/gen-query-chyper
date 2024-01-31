@@ -45,7 +45,7 @@ public class JsonReader implements Iterable<JSONObject> {
 
         JSONArray sensibleArray = jObject.optJSONArray(sensKey);
         if (sensibleArray != null) {
-            System.out.println("Dato sensibile formato da un array");
+            // System.out.println("Dato sensibile formato da un array");
             for (int i = 0; i < sensibleArray.length(); i++) {
                 coll.add(sensibleArray.getJSONObject(i));
             }
