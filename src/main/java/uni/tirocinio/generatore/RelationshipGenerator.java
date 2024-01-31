@@ -2,7 +2,7 @@ package uni.tirocinio.generatore;
 
 import org.json.JSONObject;
 
-public class RelationshipGenerator implements ElementGenerator {
+public class RelationshipGenerator extends AbstractElementGenerator {
     private ElementGenerator next;
 
     @Override
@@ -27,6 +27,18 @@ public class RelationshipGenerator implements ElementGenerator {
     @Override
     public void setNext(ElementGenerator nextGenerator) {
         next = nextGenerator;
+    }
+
+    @Override
+    protected void generateMatchPattern(JSONObject linkedTo, StringBuilder sb) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generateMatchPattern'");
+    }
+
+    @Override
+    protected void generateWherePattern(JSONObject description, StringBuilder sb) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generateWherePattern'");
     }
 
 }

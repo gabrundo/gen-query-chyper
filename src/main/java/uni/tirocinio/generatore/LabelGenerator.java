@@ -2,9 +2,7 @@ package uni.tirocinio.generatore;
 
 import org.json.JSONObject;
 
-public class LabelGenerator implements ElementGenerator {
-    private ElementGenerator next;
-
+public class LabelGenerator extends AbstractElementGenerator {
     @Override
     public String generateQuery(JSONObject data) {
         String query = "";
@@ -27,5 +25,17 @@ public class LabelGenerator implements ElementGenerator {
 
     private boolean canGenerateFromLabel(String element) {
         return element.equals("label");
+    }
+
+    @Override
+    protected void generateMatchPattern(JSONObject linkedTo, StringBuilder sb) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generateMatchPattern'");
+    }
+
+    @Override
+    protected void generateWherePattern(JSONObject description, StringBuilder sb) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generateWherePattern'");
     }
 }

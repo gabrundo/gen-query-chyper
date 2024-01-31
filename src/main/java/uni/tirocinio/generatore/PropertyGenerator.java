@@ -3,11 +3,7 @@ package uni.tirocinio.generatore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PropertyGenerator implements ElementGenerator {
-    private ElementGenerator next;
-    private final String MATCH = "MATCH";
-    private final String WHERE = "WHERE";
-    private final String IN = "IN";
+public class PropertyGenerator extends AbstractElementGenerator {
     private String key;
     private char var;
 
@@ -37,7 +33,7 @@ public class PropertyGenerator implements ElementGenerator {
         return query;
     }
 
-    private void generateWherePattern(JSONObject description, StringBuilder sb) {
+    protected void generateWherePattern(JSONObject description, StringBuilder sb) {
         String type = description.getString("type");
         Boolean listOfValues = description.getBoolean("list");
 
@@ -56,7 +52,7 @@ public class PropertyGenerator implements ElementGenerator {
         }
     }
 
-    private void generateMatchPattern(JSONObject linkedTo, StringBuilder sb) {
+    protected void generateMatchPattern(JSONObject linkedTo, StringBuilder sb) {
         if (isLinkedToNode(linkedTo)) {
             String nodeLabel = linkedTo.getString("label");
             var = Character.toLowerCase(nodeLabel.charAt(0));
@@ -88,11 +84,6 @@ public class PropertyGenerator implements ElementGenerator {
             System.out.println("Il valore non è una stringa");
             sb.append(description.getInt("value"));
         }
-    }
-
-    @Override
-    public void setNext(ElementGenerator nextGenerator) {
-        next = nextGenerator;
     }
 
     private boolean canGenerateFromProperty(String element) {
