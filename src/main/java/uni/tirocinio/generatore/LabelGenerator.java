@@ -14,7 +14,6 @@ public class LabelGenerator extends AbstractElementGenerator {
 
         if (canGenerateFromLabel(data.getString("element"))) {
             JSONObject description = data.getJSONObject("description");
-
             label = description.getString("label");
 
             generateMatchPattern(description.getJSONObject("linked-to"), sb);

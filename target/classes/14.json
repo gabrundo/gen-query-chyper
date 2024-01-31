@@ -17,11 +17,9 @@
         {
             "element": "relationship",
             "description": {
+                "label": "VOTES",
                 "start": {
-                    "label": [
-                        "Person",
-                        "Repuplican"
-                    ],
+                    "label": "Person",
                     "object": "node"
                 },
                 "end": {
