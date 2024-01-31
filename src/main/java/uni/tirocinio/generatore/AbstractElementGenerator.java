@@ -14,6 +14,4 @@ public abstract class AbstractElementGenerator implements ElementGenerator {
     }
 
     protected abstract void generateMatchPattern(JSONObject linkedTo, StringBuilder sb);
-
-    protected abstract void generateWherePattern(JSONObject description, StringBuilder sb);
 }

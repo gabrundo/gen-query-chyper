@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public class App {
     public static void main(String[] args) {
         try {
-            JsonReader reader = new JsonReader("2.json");
+            JsonReader reader = new JsonReader("14.json");
 
             for (JSONObject sensitveData : reader) {
                 ElementGenerator relationshipGen = new RelationshipGenerator();

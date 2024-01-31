@@ -71,7 +71,7 @@ public class PropertyGenerator extends AbstractElementGenerator {
             String endLabel = end.getString("label");
 
             // MATCH (:startLabel) -[var:relLabel]-> (:endLabel)
-            sb.append(MATCH).append(" (:").append(startLabel).append(") -[").append(var).append(':')
+            sb.append(MATCH).append(" (:").append(startLabel).append(") -[").append(var).append(':').append(relLabel)
                     .append("] -> (:").append(endLabel).append(")").append('\n');
         }
     }
