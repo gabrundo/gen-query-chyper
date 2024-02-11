@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 public class PropertyGenerator extends AbstractQueryGenerator {
     private final StringBuilder sb;
+    private String type;
     private String key;
     private char var;
 
@@ -15,11 +16,13 @@ public class PropertyGenerator extends AbstractQueryGenerator {
     @Override
     public String generate(JSONObject data) {
         JSONObject description = data.getJSONObject("description");
+        String mode = data.getString("sanitize");
         String query;
 
         if (canGenerateFromProperty(data.getString("element"))) {
             JSONObject linkedTo = description.getJSONObject("linked-to");
             key = description.getString("key");
+            type = description.getString("type");
 
             // Generazione del MATCH
             generateMatchPattern(linkedTo);
@@ -28,6 +31,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             generateWherePattern(description);
 
             // sanificazione del dato sensibile
+            generateSanitizePattern(description, mode);
 
             query = sb.toString();
         } else {
@@ -64,7 +68,6 @@ public class PropertyGenerator extends AbstractQueryGenerator {
     }
 
     private void generateWherePattern(JSONObject description) {
-        String type = description.getString("type");
         Boolean listOfValues = description.getBoolean("list");
 
         if (type.equals("key") || (type.equals("value") && !listOfValues)) {
@@ -90,6 +93,22 @@ public class PropertyGenerator extends AbstractQueryGenerator {
         } catch (JSONException e) {
             System.out.println("Il valore non è una stringa");
             sb.append(description.getInt("value"));
+        }
+    }
+
+    private void generateSanitizePattern(JSONObject description, String mode) {
+        Boolean listOfValues = description.getBoolean("list");
+
+        if (mode.equals("encrypt")) {
+            // TO-DO: cifratura
+        } else if (mode.equals("delete")) {
+            if (listOfValues) {
+                // TO-DO: gestione della cancellazione per multi-valore
+            } else {
+                sb.append(REMOVE).append(' ').append(var).append('.').append(key);
+            }
+        } else {
+            throw new IllegalArgumentException("Modalità di cancellazione non supportata!");
         }
     }
 
