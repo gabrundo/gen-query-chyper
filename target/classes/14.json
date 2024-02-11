@@ -12,7 +12,8 @@
                     "multiple-labels": true,
                     "object": "node"
                 }
-            }
+            },
+            "sanitize": "delete"
         },
         {
             "element": "relationship",
@@ -24,7 +25,8 @@
                 "end": {
                     "label": "Party"
                 }
-            }
+            },
+            "sanitize": "encrypt"
         }
     ]
 }

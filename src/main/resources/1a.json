@@ -10,6 +10,7 @@
             "key": "password",
             "value": "12345",
             "type": "value"
-        }
+        },
+        "sanitize": "encrypt"
     }
 }

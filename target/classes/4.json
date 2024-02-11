@@ -16,6 +16,7 @@
             "key": "bond",
             "value": "politics",
             "type": "value"
-        }
+        },
+        "sanitize": "delete"
     }
 }

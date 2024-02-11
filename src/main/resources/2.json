@@ -10,6 +10,7 @@
             "key": "hobbies",
             "value": "politics",
             "type": "value"
-        }
+        },
+        "sanitize": "delete"
     }
 }

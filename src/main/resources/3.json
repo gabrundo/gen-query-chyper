@@ -16,6 +16,7 @@
             "key": "interest",
             "value": "romantic",
             "type": "value"
-        }
+        },
+        "sanitize": "encrypt"
     }
 }

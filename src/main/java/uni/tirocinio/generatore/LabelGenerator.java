@@ -7,6 +7,8 @@ public class LabelGenerator extends AbstractQueryGenerator {
     private final StringBuilder sb;
     private String label;
     private char var;
+    private char varStart;
+    private char varEnd;
 
     public LabelGenerator() {
         sb = new StringBuilder();
@@ -38,7 +40,7 @@ public class LabelGenerator extends AbstractQueryGenerator {
         if (isLinkedToNode(linkedTo)) {
 
             sb.append(var);
-            if (!linkedTo.getBoolean("multiple-labels")) {
+            if (!hasNodeMultipleLables(linkedTo)) {
                 // MATCH (var:label)
                 sb.append(':').append(label);
             } else {
@@ -52,14 +54,13 @@ public class LabelGenerator extends AbstractQueryGenerator {
         }
 
         if (isLinkedToRelationship(linkedTo)) {
-            // Variabili da recuperare per generare la sanificazione se l'etichetta è legata
-            // ad una relazione
             JSONObject start = linkedTo.getJSONObject("start");
             JSONObject end = linkedTo.getJSONObject("end");
             String startLabel = start.getString("label");
             String endLabel = end.getString("label");
-            Character varStart = Character.toLowerCase(startLabel.charAt(0));
-            Character varEnd = Character.toLowerCase(endLabel.charAt(0));
+
+            varStart = Character.toLowerCase(startLabel.charAt(0));
+            varEnd = Character.toLowerCase(endLabel.charAt(0));
 
             // gestione di etichette di partenza e arrivo uguali
             if (varStart == varEnd) {
@@ -75,6 +76,10 @@ public class LabelGenerator extends AbstractQueryGenerator {
 
     private boolean canGenerateFromLabel(String element) {
         return element.equals("label");
+    }
+
+    private boolean hasNodeMultipleLables(JSONObject linkedTo) {
+        return linkedTo.getBoolean("multiple-labels");
     }
 
     private boolean isLinkedToNode(JSONObject linkedTo) {

@@ -9,6 +9,7 @@
             "end": {
                 "label": "Religion"
             }
-        }
+        },
+        "sanitize": "delete"
     }
 }
