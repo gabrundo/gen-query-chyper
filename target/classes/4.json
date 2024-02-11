@@ -6,12 +6,10 @@
                 "label": "FRIEND_OF",
                 "object": "relationship",
                 "start": {
-                    "label": "Person",
-                    "object": "node"
+                    "label": "Person"
                 },
                 "end": {
-                    "label": "Person",
-                    "object": "node"
+                    "label": "Person"
                 }
             },
             "list": true,

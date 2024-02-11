@@ -6,12 +6,10 @@
             "linked-to": {
                 "object": "relationship",
                 "start": {
-                    "label": "Person",
-                    "object": "node"
+                    "label": "Person"
                 },
                 "end": {
-                    "label": "Person",
-                    "object": "node"
+                    "label": "Person"
                 }
             }
         }

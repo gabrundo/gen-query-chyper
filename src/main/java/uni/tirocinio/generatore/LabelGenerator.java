@@ -3,47 +3,42 @@ package uni.tirocinio.generatore;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class LabelGenerator extends AbstractElementGenerator {
+public class LabelGenerator extends AbstractQueryGenerator {
+    private final StringBuilder sb;
     private String label;
     private char var;
 
+    public LabelGenerator() {
+        sb = new StringBuilder();
+    }
+
     @Override
-    public String generateQuery(JSONObject data) {
+    public String generate(JSONObject data) {
         String query = "";
-        StringBuilder sb = new StringBuilder();
 
         if (canGenerateFromLabel(data.getString("element"))) {
             JSONObject description = data.getJSONObject("description");
             label = description.getString("label");
 
-            generateMatchPattern(description.getJSONObject("linked-to"), sb);
+            // generazione del MATCH
+            generateMatchPattern(description.getJSONObject("linked-to"));
 
             query = sb.toString();
         } else {
-            query = next.generateQuery(data);
+            query = next.generate(data);
         }
 
         return query;
     }
 
-    @Override
-    public void setNext(ElementGenerator nextGenerator) {
-        next = nextGenerator;
-    }
-
-    private boolean canGenerateFromLabel(String element) {
-        return element.equals("label");
-    }
-
-    @Override
-    protected void generateMatchPattern(JSONObject linkedTo, StringBuilder sb) {
+    private void generateMatchPattern(JSONObject linkedTo) {
         var = Character.toLowerCase(label.charAt(0));
 
         sb.append(MATCH).append(" (");
         if (isLinkedToNode(linkedTo)) {
 
             sb.append(var);
-            if (!hasMultipleLabels(linkedTo)) {
+            if (!linkedTo.getBoolean("multiple-labels")) {
                 // MATCH (var:label)
                 sb.append(':').append(label);
             } else {
@@ -78,8 +73,8 @@ public class LabelGenerator extends AbstractElementGenerator {
         }
     }
 
-    private boolean hasMultipleLabels(JSONObject description) {
-        return description.getBoolean("multiple-labels");
+    private boolean canGenerateFromLabel(String element) {
+        return element.equals("label");
     }
 
     private boolean isLinkedToNode(JSONObject linkedTo) {

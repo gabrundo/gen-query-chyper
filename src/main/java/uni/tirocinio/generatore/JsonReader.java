@@ -35,6 +35,7 @@ public class JsonReader implements Iterable<JSONObject> {
             sb.append(line);
         }
 
+        reader.close();
         jObject = new JSONObject(sb.toString());
     }
 

@@ -19,12 +19,10 @@
             "description": {
                 "label": "VOTES",
                 "start": {
-                    "label": "Person",
-                    "object": "node"
+                    "label": "Person"
                 },
                 "end": {
-                    "label": "Party",
-                    "object": "node"
+                    "label": "Party"
                 }
             }
         }

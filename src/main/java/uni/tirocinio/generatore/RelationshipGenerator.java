@@ -2,22 +2,26 @@ package uni.tirocinio.generatore;
 
 import org.json.JSONObject;
 
-public class RelationshipGenerator extends AbstractElementGenerator {
+public class RelationshipGenerator extends AbstractQueryGenerator {
+    private final StringBuilder sb;
     private String label;
     private char var;
 
+    public RelationshipGenerator() {
+        sb = new StringBuilder();
+    }
+
     @Override
-    public String generateQuery(JSONObject data) {
+    public String generate(JSONObject data) {
         String query = "";
 
         if (canGenerateFromRelationship(data.getString("element"))) {
-            StringBuilder sb = new StringBuilder();
             JSONObject description = data.getJSONObject("description");
 
             label = description.getString("label");
             var = Character.toLowerCase(label.charAt(0));
 
-            generateMatchPattern(description, sb);
+            generateMatchPattern(description);
 
             query = sb.toString();
         } else {
@@ -25,7 +29,7 @@ public class RelationshipGenerator extends AbstractElementGenerator {
                 System.err.println("Generatore della query non supportato!");
                 throw new RuntimeException();
             } else {
-                query = next.generateQuery(data);
+                query = next.generate(data);
             }
         }
 
@@ -36,13 +40,7 @@ public class RelationshipGenerator extends AbstractElementGenerator {
         return element.equals("relationship");
     }
 
-    @Override
-    public void setNext(ElementGenerator nextGenerator) {
-        next = nextGenerator;
-    }
-
-    @Override
-    protected void generateMatchPattern(JSONObject description, StringBuilder sb) {
+    private void generateMatchPattern(JSONObject description) {
         JSONObject start = description.getJSONObject("start");
         JSONObject end = description.getJSONObject("end");
         String startLabel = start.getString("label");

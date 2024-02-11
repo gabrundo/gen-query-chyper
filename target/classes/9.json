@@ -4,12 +4,10 @@
         "description": {
             "label": "WORSHIP",
             "start": {
-                "label": "Person",
-                "object": "node"
+                "label": "Person"
             },
             "end": {
-                "label": "Religion",
-                "object": "node"
+                "label": "Religion"
             }
         }
     }

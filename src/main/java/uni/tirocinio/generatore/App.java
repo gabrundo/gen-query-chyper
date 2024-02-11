@@ -8,20 +8,18 @@ import org.json.JSONObject;
 public class App {
     public static void main(String[] args) {
         try {
-            JsonReader reader = new JsonReader("14.json");
+            JsonReader reader = new JsonReader("12.json");
 
             for (JSONObject sensitveData : reader) {
-                ElementGenerator relationshipGen = new RelationshipGenerator();
-                ElementGenerator labelGen = new LabelGenerator();
-                ElementGenerator propertyGen = new PropertyGenerator();
+                QueryGenerator relationshipGen = new RelationshipGenerator();
+                QueryGenerator labelGen = new LabelGenerator();
+                QueryGenerator propertyGen = new PropertyGenerator();
 
-                propertyGen.setNext(labelGen);
-                labelGen.setNext(relationshipGen);
-
-                String query = propertyGen.generateQuery(sensitveData);
+                propertyGen.setNextGenerator(labelGen);
+                labelGen.setNextGenerator(relationshipGen);
 
                 System.out.println("Query da eseguire:");
-                System.out.println(query);
+                System.out.println(propertyGen.generate(sensitveData));
             }
 
         } catch (IOException x) {
