@@ -11,7 +11,8 @@
                 "key": "code",
                 "value": "RNDGRL",
                 "type": "value"
-            }
+            },
+            "sanitize": "encript"
         },
         {
             "element": "property",
@@ -24,7 +25,8 @@
                 "key": "politics",
                 "value": "left-party",
                 "type": "key"
-            }
+            },
+            "sanitize": "delete"
         }
     ]
 }

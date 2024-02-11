@@ -78,7 +78,8 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             // WHERE value IN var.key
             sb.append(WHERE).append(' ');
             appendValue(description);
-            sb.append(' ').append(IN).append(' ').append(var).append('.').append(key).append('\n');
+            sb.append(' ').append(IN).append(' ').append(var).append('.')
+                    .append(key).append('\n');
         }
     }
 

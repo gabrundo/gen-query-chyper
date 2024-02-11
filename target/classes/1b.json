@@ -10,6 +10,7 @@
             "key": "disease",
             "value": "diabetes",
             "type": "key"
-        }
+        },
+        "sanitize": "delete"
     }
 }
