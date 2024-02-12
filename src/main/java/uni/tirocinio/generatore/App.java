@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public class App {
     public static void main(String[] args) {
         try {
-            JsonReader reader = new JsonReader("8.json");
+            JsonReader reader = new JsonReader("14.json");
 
             for (JSONObject sensitveData : reader) {
                 QueryGenerator relationshipGen = new RelationshipGenerator();
@@ -26,6 +26,8 @@ public class App {
             x.printStackTrace();
         } catch (JSONException y) {
             y.printStackTrace();
+        } catch (IllegalArgumentException ae) {
+            ae.printStackTrace();
         }
     }
 }

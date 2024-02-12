@@ -17,10 +17,10 @@ public class LabelGenerator extends AbstractQueryGenerator {
     @Override
     public String generate(JSONObject data) {
         String query = "";
+        String mode = data.getString("sanitize");
 
         if (canGenerateFromLabel(data.getString("element"))) {
             JSONObject description = data.getJSONObject("description");
-            String mode = data.getString("sanitize");
             label = description.getString("label");
 
             // generazione del MATCH

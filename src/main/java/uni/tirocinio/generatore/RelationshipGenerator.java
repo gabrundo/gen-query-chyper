@@ -14,6 +14,7 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
     @Override
     public String generate(JSONObject data) {
         String query = "";
+        String mode = data.getString("sanitize");
 
         if (canGenerateFromRelationship(data.getString("element"))) {
             JSONObject description = data.getJSONObject("description");
@@ -22,6 +23,8 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
             var = Character.toLowerCase(label.charAt(0));
 
             generateMatchPattern(description);
+
+            generateSanitizePattern(description, mode);
 
             query = sb.toString();
         } else {
@@ -57,5 +60,13 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
         // MATCH (varStart:startLabel) -[var:label]-> (varEnd:endLabel)
         sb.append(MATCH).append(" (").append(varStart).append(':').append(startLabel).append(") -[").append(var)
                 .append(':').append(label).append("]-> (").append(varEnd).append(':').append(endLabel).append(")\n");
+    }
+
+    private void generateSanitizePattern(JSONObject description, String mode) {
+        if (mode.equals("delete")) {
+            sb.append(DD).append(' ').append(var);
+        } else {
+            throw new IllegalArgumentException("Modalità di sanificazione non supportata");
+        }
     }
 }
