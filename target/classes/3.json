@@ -1,0 +1,22 @@
+{
+    "sensitive-data": {
+        "element": "property",
+        "description": {
+            "linked-to": {
+                "label": "FRIEND_OF",
+                "object": "relationship",
+                "start": {
+                    "label": "Person"
+                },
+                "end": {
+                    "label": "Person"
+                }
+            },
+            "list": false,
+            "key": "interest",
+            "value": "romantic",
+            "type": "value"
+        },
+        "sanitize": "encrypt"
+    }
+}

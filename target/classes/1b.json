@@ -1,0 +1,16 @@
+{
+    "sensitive-data": {
+        "element": "property",
+        "description": {
+            "linked-to": {
+                "label": "Patient",
+                "object": "node"
+            },
+            "list": false,
+            "key": "disease",
+            "value": "diabetes",
+            "type": "key"
+        },
+        "sanitize": "delete"
+    }
+}

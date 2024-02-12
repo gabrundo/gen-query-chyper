@@ -100,10 +100,10 @@ public class PropertyGenerator extends AbstractQueryGenerator {
         Boolean listOfValues = description.getBoolean("list");
 
         if (mode.equals("encrypt")) {
-            // TO-DO: cifratura
+            // TODO: cifratura
         } else if (mode.equals("delete")) {
             if (listOfValues) {
-                // TO-DO: gestione della cancellazione per multi-valore
+                // TODO: gestione della cancellazione per multi-valore
             } else {
                 sb.append(REMOVE).append(' ').append(var).append('.').append(key);
             }

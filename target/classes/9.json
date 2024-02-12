@@ -1,0 +1,15 @@
+{
+    "sensitive-data": {
+        "element": "relationship",
+        "description": {
+            "label": "WORSHIP",
+            "start": {
+                "label": "Person"
+            },
+            "end": {
+                "label": "Religion"
+            }
+        },
+        "sanitize": "delete"
+    }
+}

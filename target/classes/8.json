@@ -1,0 +1,18 @@
+{
+    "sensitive-data": {
+        "element": "label",
+        "description": {
+            "label": "HAVE_AFFAIR",
+            "linked-to": {
+                "object": "relationship",
+                "start": {
+                    "label": "Person"
+                },
+                "end": {
+                    "label": "Person"
+                }
+            }
+        },
+        "sanitize": "delete"
+    }
+}
