@@ -58,6 +58,7 @@ public class AESCipher {
         Scanner sc = new Scanner(System.in);
         System.out.println("Inserire dato da cifrare: ");
         String data = sc.nextLine();
+        sc.close();
 
         String enc = c.encrypt(data);
         System.out.println("Dato cifrato: " + enc);

@@ -9,6 +9,8 @@ public class LabelGenerator extends AbstractQueryGenerator {
     private char var;
     private char varStart;
     private char varEnd;
+    private String startLabel;
+    private String endLabel;
 
     public LabelGenerator() {
         sb = new StringBuilder();
@@ -42,7 +44,6 @@ public class LabelGenerator extends AbstractQueryGenerator {
 
         sb.append(MATCH).append(" (");
         if (isLinkedToNode(linkedTo)) {
-
             sb.append(var);
             if (!hasNodeMultipleLables(linkedTo)) {
                 // MATCH (var:label)
@@ -58,10 +59,8 @@ public class LabelGenerator extends AbstractQueryGenerator {
         }
 
         if (isLinkedToRelationship(linkedTo)) {
-            JSONObject start = linkedTo.getJSONObject("start");
-            JSONObject end = linkedTo.getJSONObject("end");
-            String startLabel = start.getString("label");
-            String endLabel = end.getString("label");
+            startLabel = linkedTo.getJSONObject("start").getString("label");
+            endLabel = linkedTo.getJSONObject("end").getString("label");
 
             varStart = Character.toLowerCase(startLabel.charAt(0));
             varEnd = Character.toLowerCase(endLabel.charAt(0));
@@ -80,20 +79,35 @@ public class LabelGenerator extends AbstractQueryGenerator {
 
     private void generateSanitizePattern(JSONObject description, String mode) {
         JSONObject linkedTo = description.getJSONObject("linked-to");
+
         if (mode.equals("encrypt")) {
             if (isLinkedToRelationship(linkedTo)) {
-                // TODO: cifratura dell'etichetta di una relazione
+                AESCipher cipher = new AESCipher("gabrielerundo");
+                String newLabel = cipher.encrypt(label);
 
+                // DELETE var
+                // MERGE (varStart:startLable) -[:newLabel]-> (varEnd:endLabel)
+                sb.append(DELETE).append(' ').append(var).append('\n');
+                sb.append(MERGE).append(" (").append(varStart).append(':').append(startLabel).append(") -[:")
+                        .append(newLabel).append("]->").append('(').append(varEnd).append(':').append(endLabel)
+                        .append(")\n");
+            } else if (isLinkedToNode(linkedTo)) {
+                AESCipher cipher = new AESCipher("gabrielerundo");
+                String newLabel = cipher.encrypt(label);
+
+                // REMOVE var.label
+                // MERGE var:newLabel
+                sb.append(REMOVE).append(' ').append(var).append(':').append(label).append('\n');
+                sb.append(MERGE).append(' ').append(var).append(':').append(newLabel).append('\n');
+            } else {
+                throw new IllegalArgumentException("Cifratura non supportata!");
             }
         } else if (mode.equals("delete")) {
             if (isLinkedToNode(linkedTo) && hasNodeMultipleLables(linkedTo)) {
                 int numberOfLabels = linkedTo.getJSONArray("labels").length();
 
-                if (numberOfLabels >= 2) {
+                if (numberOfLabels >= 2)
                     sb.append(REMOVE).append(' ').append(var).append(':').append(label);
-                } else {
-                    sb.append(DD).append(' ').append(var);
-                }
             } else {
                 sb.append(DD).append(' ').append(var);
             }
