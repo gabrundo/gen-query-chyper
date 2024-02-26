@@ -42,7 +42,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
     }
 
     private void generateMatchPattern(JSONObject linkedTo) {
-        sb.append(MATCH).append(" (");
+        sb.append(MATCH).append(" (:");
 
         if (isLinkedToNode(linkedTo)) {
             String nodeLabel = linkedTo.getString("label");
@@ -56,10 +56,8 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             String relLabel = linkedTo.getString("label");
             var = Character.toLowerCase(relLabel.charAt(0));
 
-            JSONObject start = linkedTo.getJSONObject("start");
-            JSONObject end = linkedTo.getJSONObject("end");
-            String startLabel = start.getString("label");
-            String endLabel = end.getString("label");
+            String startLabel = linkedTo.getJSONObject("start").getString("label");
+            String endLabel = linkedTo.getJSONObject("end").getString("label");
 
             // MATCH (:startLabel) -[var:relLabel]-> (:endLabel)
             sb.append(startLabel).append(") -[").append(var).append(':').append(relLabel)
@@ -86,29 +84,56 @@ public class PropertyGenerator extends AbstractQueryGenerator {
         }
     }
 
+    private void generateSanitizePattern(JSONObject description, String mode) {
+        Boolean listOfValues = description.getBoolean("list");
+        AESCipher cipher = new AESCipher("gabriele.rundo");
+
+        if (mode.equals("encrypt")) {
+            if (type.equals("key")) {
+                String newKey = cipher.encrypt(key);
+                sb.append(REMOVE).append(' ').append(var).append('.').append(key);
+                sb.append(SET).append(' ').append(var).append('.').append(newKey).append(" = ");
+                appendValue(description);
+                sb.append('\n');
+            } else if (type.equals("value")) {
+                String value = null;
+                try {
+                    value = description.getString("value");
+                } catch (JSONException e) {
+                    value = Integer.toString(description.getInt(value));
+                }
+
+                String newValue = cipher.encrypt(value);
+
+                if (listOfValues) {
+                    // TODO: gestione della cancellazione per multi-valore interrogando il database
+                    sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
+                } else {
+                    // SET var.key = newValue
+                    sb.append(SET).append(' ').append(var).append('.').append(key).append(" = ").append('"')
+                            .append(newValue).append('"').append('\n');
+                }
+            } else {
+                throw new IllegalArgumentException("Cifratura non supportata!");
+            }
+        } else if (mode.equals("delete")) {
+            if (listOfValues) {
+                // TODO: gestione della cancellazione per multi-valore interrogando il database
+                sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
+            } else {
+                sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
+            }
+        } else {
+            throw new IllegalArgumentException("Modalità di cancellazione non supportata!");
+        }
+    }
+
     private void appendValue(JSONObject description) {
         try {
             String value = description.getString("value");
             sb.append('"').append(value).append('"');
         } catch (JSONException e) {
-            System.out.println("Il valore non è una stringa");
             sb.append(description.getInt("value"));
-        }
-    }
-
-    private void generateSanitizePattern(JSONObject description, String mode) {
-        Boolean listOfValues = description.getBoolean("list");
-
-        if (mode.equals("encrypt")) {
-            // TODO: cifratura
-        } else if (mode.equals("delete")) {
-            if (listOfValues) {
-                // TODO: gestione della cancellazione per multi-valore
-            } else {
-                sb.append(REMOVE).append(' ').append(var).append('.').append(key);
-            }
-        } else {
-            throw new IllegalArgumentException("Modalità di cancellazione non supportata!");
         }
     }
 
