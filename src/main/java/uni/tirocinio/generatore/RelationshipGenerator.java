@@ -39,10 +39,6 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
         return query;
     }
 
-    private boolean canGenerateFromRelationship(String element) {
-        return element.equals("relationship");
-    }
-
     private void generateMatchPattern(JSONObject description) {
         JSONObject start = description.getJSONObject("start");
         JSONObject end = description.getJSONObject("end");
@@ -68,5 +64,9 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
         } else {
             throw new IllegalArgumentException("Modalità di sanificazione non supportata");
         }
+    }
+
+    private boolean canGenerateFromRelationship(String element) {
+        return element.equals("relationship");
     }
 }
