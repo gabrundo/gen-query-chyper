@@ -17,6 +17,6 @@
             "value": "romantic",
             "type": "value"
         },
-        "sanitize": "encript"
+        "sanitize": "encrypt"
     }
 }

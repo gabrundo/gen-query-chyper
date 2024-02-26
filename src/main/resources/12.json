@@ -12,7 +12,7 @@
                 "value": "RNDGRL",
                 "type": "value"
             },
-            "sanitize": "encript"
+            "sanitize": "encrypt"
         },
         {
             "element": "property",

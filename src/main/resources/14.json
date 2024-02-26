@@ -15,18 +15,20 @@
             },
             "sanitize": "delete"
         },
-        {
-            "element": "relationship",
-            "description": {
-                "label": "VOTES",
-                "start": {
-                    "label": "Person"
-                },
-                "end": {
-                    "label": "Party"
-                }
+        "sanitize": "delete"
+    },
+    {
+        "element": "relationship",
+        "description": {
+            "label": "VOTES",
+            "start": {
+                "label": "Person"
             },
-            "sanitize": "encript"
-        }
-    ]
+            "end": {
+                "label": "Party"
+            }
+        },
+        "sanitize": "encript"
+    }
+]
 }
