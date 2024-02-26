@@ -42,7 +42,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
     }
 
     private void generateMatchPattern(JSONObject linkedTo) {
-        sb.append(MATCH).append(" (:");
+        sb.append(MATCH).append(" (");
 
         if (isLinkedToNode(linkedTo)) {
             String nodeLabel = linkedTo.getString("label");
@@ -60,7 +60,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             String endLabel = linkedTo.getJSONObject("end").getString("label");
 
             // MATCH (:startLabel) -[var:relLabel]-> (:endLabel)
-            sb.append(startLabel).append(") -[").append(var).append(':').append(relLabel)
+            sb.append(':').append(startLabel).append(") -[").append(var).append(':').append(relLabel)
                     .append("] -> (:").append(endLabel).append(")").append('\n');
         }
     }
