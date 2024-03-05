@@ -40,10 +40,9 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
     }
 
     private void generateMatchPattern(JSONObject description) {
-        JSONObject start = description.getJSONObject("start");
-        JSONObject end = description.getJSONObject("end");
-        String startLabel = start.getString("label");
-        String endLabel = end.getString("label");
+        String startLabel = description.getJSONObject("start").getString("label");
+        String endLabel = description.getJSONObject("end").getString("label");
+
         Character varStart = Character.toLowerCase(startLabel.charAt(0));
         Character varEnd = Character.toLowerCase(endLabel.charAt(0));
 
@@ -61,7 +60,7 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
     private void generateSanitizePattern(JSONObject description, String mode) {
         if (mode.equals("delete")) {
             // DELETE var
-            sb.append(DELETE).append(' ').append(var);
+            sb.append(DELETE).append(' ').append(var).append('\n');
         } else {
             throw new IllegalArgumentException("Modalità di sanificazione non supportata");
         }

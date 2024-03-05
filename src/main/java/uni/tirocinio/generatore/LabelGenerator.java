@@ -107,10 +107,10 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 int numberOfLabels = linkedTo.getJSONArray("labels").length();
 
                 if (numberOfLabels >= 2)
-                    sb.append(REMOVE).append(' ').append(var).append(':').append(label);
+                    sb.append(REMOVE).append(' ').append(var).append(':').append(label).append('\n');
             } else {
                 // DELETE var
-                sb.append(DELETE).append(' ').append(var);
+                sb.append(DELETE).append(' ').append(var).append('\n');
             }
         } else {
             throw new IllegalArgumentException("Modalità di sanificazione non riconosciuta!");

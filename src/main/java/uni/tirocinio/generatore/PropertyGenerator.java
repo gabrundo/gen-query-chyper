@@ -3,12 +3,10 @@ package uni.tirocinio.generatore;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PropertyGenerator extends AbstractQueryGenerator {
     private final StringBuilder sb;
-    // TODO: Rappresentare correttamente il tipo del valore di ritotno
     private Map<String, Object> parameters;
     private String type;
     private String key;
@@ -25,6 +23,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
         JSONObject description = data.getJSONObject("description");
         String mode = data.getString("sanitize");
         String query;
+        String rawQuery = "";
 
         if (canGenerateFromProperty(data.getString("element"))) {
             JSONObject linkedTo = description.getJSONObject("linked-to");
@@ -41,14 +40,17 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             // sanificazione del dato sensibile
             generateSanitizePattern(description, mode);
 
+            // !!!ATTENZIONE!!!
+            // query è quella da poi esegiuire con il driver
+            // parametri in chiaro da non utilizzare con il driver
             query = sb.toString();
-
-            System.out.println("Parametri della query:");
+            rawQuery = sb.toString();
             for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-                System.out.println(entry.getKey() + ", " + entry.getValue());
+                rawQuery = rawQuery.replaceAll("\\$" + entry.getKey(), '\'' + entry.getValue().toString() + '\'');
             }
-            System.out.println("---");
 
+            // TODO: Sistemare prima di eseguire le query tramite l'applicazione
+            query = rawQuery;
         } else {
             query = next.generate(data);
         }
@@ -87,21 +89,21 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             sb.append(WHERE).append(' ').append(var).append('.').append(key).append(" = ").append('$').append(key)
                     .append('\n');
 
-            // TODO: Aggiunta dei parametri in una mappa
-            parameters.put("$" + key, value);
+            // Aggiunta alla mappa del parametro con il tipo corretto
+            parameters.put(key, value);
         }
 
         if (type.equals("value") && listOfValues) {
             // WHERE $value IN var.key
             sb.append(WHERE).append(" $value ").append(IN).append(' ').append(var).append('.').append(key).append('\n');
 
-            // TODO: Aggiunta dei parametri in una mappa
-            parameters.put("$value", value);
+            // Aggiunta alla mappa del parametro con il tipo corretto
+            parameters.put("value", value);
         }
     }
 
     private void generateSanitizePattern(JSONObject description, String mode) {
-        AESCipher cipher = new AESCipher("gabriele.rundo");
+        AESCipher cipher = new AESCipher("gabrielerundo");
 
         if (mode.equals("encrypt")) {
             if (type.equals("key")) {
@@ -109,12 +111,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             }
 
             if (type.equals("value")) {
-                String value = null;
-                try {
-                    value = description.getString("value");
-                } catch (JSONException e) {
-                    value = Integer.toString(description.getInt(value));
-                }
+                String value = description.get("value").toString();
                 String newValue = cipher.encrypt(value);
 
                 if (listOfValues) {
@@ -126,10 +123,10 @@ public class PropertyGenerator extends AbstractQueryGenerator {
                     }
                 } else {
                     // SET var.key = $new
-                    sb.append(SET).append(' ').append(var).append('.').append(key).append(" = ").append("$new");
+                    sb.append(SET).append(' ').append(var).append('.').append(key).append(" = $new\n");
 
-                    // TODO: gestione dei parametri da aggiungere alla mappa
-                    parameters.put("$new", newValue);
+                    // Aggiunta alla mappa dei parametri con il tipo corretto
+                    parameters.put("new", newValue);
                 }
             }
         } else if (mode.equals("delete")) {

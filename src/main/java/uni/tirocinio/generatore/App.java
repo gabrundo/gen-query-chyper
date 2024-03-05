@@ -18,8 +18,8 @@ public class App {
                 propertyGen.setNextGenerator(labelGen);
                 labelGen.setNextGenerator(relationshipGen);
 
-                System.out.println("Query da eseguire:");
-                System.out.println(propertyGen.generate(sensitveData));
+                String query = propertyGen.generate(sensitveData);
+                System.out.println("Query da eseguire: \n" + query);
             }
         } catch (IOException e) {
             e.printStackTrace();
