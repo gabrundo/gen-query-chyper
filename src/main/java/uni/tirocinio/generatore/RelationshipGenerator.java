@@ -60,7 +60,8 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
 
     private void generateSanitizePattern(JSONObject description, String mode) {
         if (mode.equals("delete")) {
-            sb.append(DD).append(' ').append(var);
+            // DELETE var
+            sb.append(DELETE).append(' ').append(var);
         } else {
             throw new IllegalArgumentException("Modalità di sanificazione non supportata");
         }

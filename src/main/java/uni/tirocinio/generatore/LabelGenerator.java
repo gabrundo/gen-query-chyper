@@ -56,9 +56,7 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 }
             }
             sb.append(")\n");
-        }
-
-        if (isLinkedToRelationship(linkedTo)) {
+        } else if (isLinkedToRelationship(linkedTo)) {
             startLabel = linkedTo.getJSONObject("start").getString("label");
             endLabel = linkedTo.getJSONObject("end").getString("label");
 
@@ -74,6 +72,8 @@ public class LabelGenerator extends AbstractQueryGenerator {
             // MATCH (varStart:startLabel) -[var:label]-> (varEnd:endLabel)
             sb.append(varStart).append(':').append(startLabel).append(") -[").append(var).append(':').append(label)
                     .append("]-> (").append(varEnd).append(':').append(endLabel).append(")\n");
+        } else {
+            throw new IllegalArgumentException("Generazione non consentita, elemento non riconosciuto");
         }
     }
 
@@ -109,7 +109,8 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 if (numberOfLabels >= 2)
                     sb.append(REMOVE).append(' ').append(var).append(':').append(label);
             } else {
-                sb.append(DD).append(' ').append(var);
+                // DELETE var
+                sb.append(DELETE).append(' ').append(var);
             }
         } else {
             throw new IllegalArgumentException("Modalità di sanificazione non riconosciuta!");

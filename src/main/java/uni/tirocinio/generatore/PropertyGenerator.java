@@ -1,16 +1,23 @@
 package uni.tirocinio.generatore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PropertyGenerator extends AbstractQueryGenerator {
     private final StringBuilder sb;
+    // TODO: Rappresentare correttamente il tipo del valore di ritotno
+    private Map<String, Object> parameters;
     private String type;
     private String key;
     private char var;
+    private Boolean listOfValues;
 
     public PropertyGenerator() {
         sb = new StringBuilder();
+        parameters = new HashMap<>();
     }
 
     @Override
@@ -21,6 +28,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
 
         if (canGenerateFromProperty(data.getString("element"))) {
             JSONObject linkedTo = description.getJSONObject("linked-to");
+            listOfValues = description.getBoolean("list");
             key = description.getString("key");
             type = description.getString("type");
 
@@ -34,6 +42,13 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             generateSanitizePattern(description, mode);
 
             query = sb.toString();
+
+            System.out.println("Parametri della query:");
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                System.out.println(entry.getKey() + ", " + entry.getValue());
+            }
+            System.out.println("---");
+
         } else {
             query = next.generate(data);
         }
@@ -42,14 +57,12 @@ public class PropertyGenerator extends AbstractQueryGenerator {
     }
 
     private void generateMatchPattern(JSONObject linkedTo) {
-        sb.append(MATCH).append(" (:");
-
         if (isLinkedToNode(linkedTo)) {
             String nodeLabel = linkedTo.getString("label");
             var = Character.toLowerCase(nodeLabel.charAt(0));
 
             // MATCH (var:nodeLabel)
-            sb.append(var).append(':').append(nodeLabel).append(")").append('\n');
+            sb.append(MATCH).append(" (").append(var).append(':').append(nodeLabel).append(")").append('\n');
         }
 
         if (isLinkedToRelationship(linkedTo)) {
@@ -60,80 +73,77 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             String endLabel = linkedTo.getJSONObject("end").getString("label");
 
             // MATCH (:startLabel) -[var:relLabel]-> (:endLabel)
-            sb.append(startLabel).append(") -[").append(var).append(':').append(relLabel)
-                    .append("] -> (:").append(endLabel).append(")").append('\n');
+            sb.append(MATCH).append(" (").append(':').append(startLabel).append(") -[").append(var).append(':')
+                    .append(relLabel).append("] -> (:").append(endLabel).append(")").append('\n');
         }
     }
 
     private void generateWherePattern(JSONObject description) {
         Boolean listOfValues = description.getBoolean("list");
+        Object value = description.get("value");
 
         if (type.equals("key") || (type.equals("value") && !listOfValues)) {
-            // WHERE var.key = value
-            sb.append(WHERE).append(' ').append(var).append('.').append(key).append(" = ");
-            appendValue(description);
-            sb.append('\n');
+            // WHERE var.key = $key
+            sb.append(WHERE).append(' ').append(var).append('.').append(key).append(" = ").append('$').append(key)
+                    .append('\n');
+
+            // TODO: Aggiunta dei parametri in una mappa
+            parameters.put("$" + key, value);
         }
 
         if (type.equals("value") && listOfValues) {
-            // WHERE value IN var.key
-            sb.append(WHERE).append(' ');
-            appendValue(description);
-            sb.append(' ').append(IN).append(' ').append(var).append('.')
-                    .append(key).append('\n');
+            // WHERE $value IN var.key
+            sb.append(WHERE).append(" $value ").append(IN).append(' ').append(var).append('.').append(key).append('\n');
+
+            // TODO: Aggiunta dei parametri in una mappa
+            parameters.put("$value", value);
         }
     }
 
     private void generateSanitizePattern(JSONObject description, String mode) {
-        Boolean listOfValues = description.getBoolean("list");
         AESCipher cipher = new AESCipher("gabriele.rundo");
 
         if (mode.equals("encrypt")) {
             if (type.equals("key")) {
-                String newKey = cipher.encrypt(key);
                 sb.append(REMOVE).append(' ').append(var).append('.').append(key);
-                sb.append(SET).append(' ').append(var).append('.').append(newKey).append(" = ");
-                appendValue(description);
-                sb.append('\n');
-            } else if (type.equals("value")) {
+            }
+
+            if (type.equals("value")) {
                 String value = null;
                 try {
                     value = description.getString("value");
                 } catch (JSONException e) {
                     value = Integer.toString(description.getInt(value));
                 }
-
                 String newValue = cipher.encrypt(value);
 
                 if (listOfValues) {
-                    // TODO: gestione della cancellazione per multi-valore interrogando il database
-                    sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
+                    System.out.println("Lista di valori in cifratura");
+                    int numberOfValues = 0; /* TODO: Dimensione della lista di valori */
+                    if (numberOfValues > 2) {
+                    } else {
+                        sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
+                    }
                 } else {
-                    // SET var.key = newValue
-                    sb.append(SET).append(' ').append(var).append('.').append(key).append(" = ").append('"')
-                            .append(newValue).append('"').append('\n');
+                    // SET var.key = $new
+                    sb.append(SET).append(' ').append(var).append('.').append(key).append(" = ").append("$new");
+
+                    // TODO: gestione dei parametri da aggiungere alla mappa
+                    parameters.put("$new", newValue);
                 }
-            } else {
-                throw new IllegalArgumentException("Cifratura non supportata!");
             }
         } else if (mode.equals("delete")) {
             if (listOfValues) {
-                // TODO: gestione della cancellazione per multi-valore interrogando il database
-                sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
+                System.out.println("Lista di valori in cancellazione");
+                int numberOfValues = 0; /* TODO: Da inizializzare interrogando il database */
+                if (numberOfValues > 2) {
+                    // TODO: Cancellazione tramite list-comprension
+                }
             } else {
                 sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
             }
         } else {
             throw new IllegalArgumentException("Modalità di cancellazione non supportata!");
-        }
-    }
-
-    private void appendValue(JSONObject description) {
-        try {
-            String value = description.getString("value");
-            sb.append('"').append(value).append('"');
-        } catch (JSONException e) {
-            sb.append(description.getInt("value"));
         }
     }
 
