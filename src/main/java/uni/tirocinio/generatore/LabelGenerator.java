@@ -1,5 +1,9 @@
 package uni.tirocinio.generatore;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -134,5 +138,10 @@ public class LabelGenerator extends AbstractQueryGenerator {
         String linkedElement = linkedTo.getString("object");
 
         return linkedElement.equals("relationship");
+    }
+
+    @Override
+    public Map<String, Object> getParameters() {
+        return Collections.unmodifiableMap(new HashMap<>());
     }
 }

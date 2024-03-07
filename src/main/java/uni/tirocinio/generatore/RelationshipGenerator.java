@@ -1,5 +1,9 @@
 package uni.tirocinio.generatore;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 public class RelationshipGenerator extends AbstractQueryGenerator {
@@ -68,5 +72,10 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
 
     private boolean canGenerateFromRelationship(String element) {
         return element.equals("relationship");
+    }
+
+    @Override
+    public Map<String, Object> getParameters() {
+        return Collections.unmodifiableMap(new HashMap<>());
     }
 }

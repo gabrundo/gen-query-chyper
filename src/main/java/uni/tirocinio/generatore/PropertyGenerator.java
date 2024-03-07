@@ -1,5 +1,6 @@
 package uni.tirocinio.generatore;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,6 @@ public class PropertyGenerator extends AbstractQueryGenerator {
         JSONObject description = data.getJSONObject("description");
         String mode = data.getString("sanitize");
         String query;
-        String rawQuery = "";
 
         if (canGenerateFromProperty(data.getString("element"))) {
             JSONObject linkedTo = description.getJSONObject("linked-to");
@@ -40,17 +40,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             // sanificazione del dato sensibile
             generateSanitizePattern(description, mode);
 
-            // !!!ATTENZIONE!!!
-            // query è quella da poi esegiuire con il driver
-            // parametri in chiaro da non utilizzare con il driver
             query = sb.toString();
-            rawQuery = sb.toString();
-            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-                rawQuery = rawQuery.replaceAll("\\$" + entry.getKey(), '\'' + entry.getValue().toString() + '\'');
-            }
-
-            // TODO: Sistemare prima di eseguire le query tramite l'applicazione
-            query = rawQuery;
         } else {
             query = next.generate(data);
         }
@@ -115,12 +105,8 @@ public class PropertyGenerator extends AbstractQueryGenerator {
                 String newValue = cipher.encrypt(value);
 
                 if (listOfValues) {
-                    System.out.println("Lista di valori in cifratura");
-                    int numberOfValues = 0; /* TODO: Dimensione della lista di valori */
-                    if (numberOfValues > 2) {
-                    } else {
-                        sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
-                    }
+                    // TODO: Cifratura di un valore in una lista
+                    sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
                 } else {
                     // SET var.key = $new
                     sb.append(SET).append(' ').append(var).append('.').append(key).append(" = $new\n");
@@ -131,10 +117,16 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             }
         } else if (mode.equals("delete")) {
             if (listOfValues) {
-                System.out.println("Lista di valori in cancellazione");
-                int numberOfValues = 0; /* TODO: Da inizializzare interrogando il database */
+                int numberOfValues = description.getJSONArray("values").length();
                 if (numberOfValues > 2) {
-                    // TODO: Cancellazione tramite list-comprension
+                    // SET var.key = [x IN var.key WHERE x <> $key]
+                    sb.append(SET).append(' ').append(var).append('.').append(key).append(" = [x ").append(IN)
+                            .append(' ').append(var).append('.').append(key).append(' ').append(WHERE)
+                            .append(" x <> $value]\n");
+
+                    // valore già inserito perché tratto una lista
+                } else {
+                    sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
                 }
             } else {
                 sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
@@ -158,6 +150,11 @@ public class PropertyGenerator extends AbstractQueryGenerator {
         String linkedElement = linkedTo.getString("object");
 
         return linkedElement.equals("relationship");
+    }
+
+    @Override
+    public Map<String, Object> getParameters() {
+        return Collections.unmodifiableMap(parameters);
     }
 
 }
