@@ -15,6 +15,11 @@
             "list": true,
             "key": "bond",
             "value": "politics",
+            "values": [
+                "politics",
+                "family",
+                "photography"
+            ],
             "type": "value"
         },
         "sanitize": "delete"
