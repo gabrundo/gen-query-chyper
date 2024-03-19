@@ -72,23 +72,24 @@ public class PropertyGenerator extends AbstractQueryGenerator {
 
     private void generateWherePattern(JSONObject description) {
         Boolean listOfValues = description.getBoolean("list");
-        Object value = description.get("value");
 
-        if (type.equals("key") || (type.equals("value") && !listOfValues)) {
-            // WHERE var.key = $key
-            sb.append(WHERE).append(' ').append(var).append('.').append(key).append(" = ").append('$').append(key)
-                    .append('\n');
+        if (type.equals("value")) {
+            Object value = description.get("value");
+            if (listOfValues) {
+                // WHERE $value IN var.key
+                sb.append(WHERE).append(" $value ").append(IN).append(' ').append(var).append('.').append(key)
+                        .append('\n');
 
-            // Aggiunta alla mappa del parametro con il tipo corretto
-            parameters.put(key, value);
-        }
+                // Aggiunta alla mappa del parametro con il tipo corretto
+                parameters.put("value", value);
+            } else {
+                // WHERE var.key = $key
+                sb.append(WHERE).append(' ').append(var).append('.').append(key).append(" = ").append('$').append(key)
+                        .append('\n');
 
-        if (type.equals("value") && listOfValues) {
-            // WHERE $value IN var.key
-            sb.append(WHERE).append(" $value ").append(IN).append(' ').append(var).append('.').append(key).append('\n');
-
-            // Aggiunta alla mappa del parametro con il tipo corretto
-            parameters.put("value", value);
+                // Aggiunta alla mappa del parametro con il tipo corretto
+                parameters.put(key, value);
+            }
         }
     }
 
@@ -101,8 +102,8 @@ public class PropertyGenerator extends AbstractQueryGenerator {
             }
 
             if (type.equals("value")) {
-                String value = description.get("value").toString();
-                String newValue = cipher.encrypt(value);
+                Object value = description.get("value");
+                String newValue = cipher.encrypt(value.toString());
 
                 if (listOfValues) {
                     // TODO: Cifratura di un valore in una lista
