@@ -11,7 +11,7 @@ import org.neo4j.driver.EagerResult;
 public class App {
     public static void main(String[] args) {
         try {
-            JsonReader reader = new JsonReader("1b.json");
+            JsonReader reader = new JsonReader("delete10.json");
             String dbUri = "neo4j://localhost";
             String dbUser = "neo4j";
             String dbName = "neo4j";

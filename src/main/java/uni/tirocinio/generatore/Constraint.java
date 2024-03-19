@@ -217,8 +217,5 @@ public class Constraint {
 
         c.createConstraint("delete", 10);
         c.printFile("delete10.json");
-
-        c.createConstraint("delete", 100);
-        c.printFile("delete100.json");
     }
 }
