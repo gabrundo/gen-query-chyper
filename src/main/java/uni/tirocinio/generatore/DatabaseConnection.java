@@ -16,6 +16,7 @@ public class DatabaseConnection {
     public DatabaseConnection(String dbUri, String dbUser, String dbPassword) {
         driver = GraphDatabase.driver(Objects.requireNonNull(dbUri),
                 AuthTokens.basic(Objects.requireNonNull(dbUser), Objects.requireNonNull(dbPassword)));
+        driver.verifyConnectivity();
     }
 
     public EagerResult execute(String dbName, String query, Map<String, Object> parameters) {
