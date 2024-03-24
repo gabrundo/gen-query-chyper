@@ -2,7 +2,6 @@ package uni.tirocinio.generatore;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
@@ -22,9 +21,6 @@ public class DatabaseConnection {
     public EagerResult execute(String dbName, String query, Map<String, Object> parameters) {
         EagerResult result = driver.executableQuery(query).withParameters(Objects.requireNonNull(parameters))
                 .withConfig(QueryConfig.builder().withDatabase(Objects.requireNonNull(dbName)).build()).execute();
-
-        System.out.println(result.summary().resultAvailableAfter(TimeUnit.MILLISECONDS));
-
         return result;
     }
 }
