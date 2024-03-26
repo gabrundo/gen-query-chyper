@@ -21,7 +21,7 @@ public class Constraint {
             new Relationship("MENTIONS", "Tweet", "User"),
             new Relationship("RETWEETS", "Tweet", "Tweet"),
             new Relationship("REPLAY_TO", "Tweet", "Tweet"));
-    private final List<String> nodeLabels = List.of("Hashtag", "Link", "Source", "Tweet", "User", "Me");
+    private final List<String> nodeLabels = List.of("Hashtag", "Link", "Source", "Tweet", "User");
     private final Map<String, List<String>> nodeProperties = Map.of(
             "Hashtag", List.of("name"),
             "Link", List.of("url"),
@@ -51,7 +51,6 @@ public class Constraint {
         int i = 0;
         while (i < n) {
             while (0 <= i && i < n * 0.62) {
-                System.out.println("Generazione dato sensibile associato ad un al testo del Tweet");
                 JSONObject data = new JSONObject();
                 JSONObject description = new JSONObject();
                 JSONObject linkedTo = new JSONObject();
@@ -74,7 +73,6 @@ public class Constraint {
             }
 
             while (0.62 * n <= i && i < n * 0.92) {
-                System.out.println("Generazione dato sensibile associato ad un al nome del User");
                 JSONObject data = new JSONObject();
                 JSONObject description = new JSONObject();
                 JSONObject linkedTo = new JSONObject();
@@ -97,7 +95,6 @@ public class Constraint {
             }
 
             while (0.92 * n <= i && i < n * 0.98) {
-                System.out.println("Generazione dato sensibile associato ad un al nome del Hashtag");
                 JSONObject data = new JSONObject();
                 JSONObject description = new JSONObject();
                 JSONObject linkedTo = new JSONObject();
@@ -120,20 +117,19 @@ public class Constraint {
             }
 
             while (0.98 * n <= i && i < n * 0.991) {
-                System.out.println("Generazione dato sensibile associato ad una chiave di una proprietà");
-
                 JSONObject data = new JSONObject();
                 JSONObject description = new JSONObject();
                 JSONObject linkedTo = new JSONObject();
 
                 String node = nodeLabels.get(random.nextInt(nodeLabels.size()));
+                List<String> keysOfNode = nodeProperties.get(node);
 
                 linkedTo.put("label", node);
                 linkedTo.put("object", "node");
                 description.put("linked-to", linkedTo);
 
                 description.put("list", false);
-                description.put("key", nodeProperties.get(node).get(random.nextInt(nodeProperties.get(node).size())));
+                description.put("key", keysOfNode.get(random.nextInt(keysOfNode.size())));
                 description.put("type", "key");
 
                 data.put("element", "property");
@@ -145,7 +141,6 @@ public class Constraint {
             }
 
             while (0.991 * n <= i && i < n * 0.997) {
-                System.out.println("Generazione di un dato sensibile associato ad una relazione");
                 JSONObject data = new JSONObject();
                 JSONObject description = new JSONObject();
 
@@ -164,12 +159,11 @@ public class Constraint {
             }
 
             while (0.997 * n <= i && i < n) {
-                System.out.println("Generazione di un dato sensibile associato ad un'etichetta");
                 JSONObject data = new JSONObject();
                 JSONObject description = new JSONObject();
                 JSONObject linkedTo = new JSONObject();
 
-                String label = nodeLabels.get(nodeLabels.size());
+                String label = nodeLabels.get(random.nextInt(nodeLabels.size()));
 
                 linkedTo.put("multiple-labels", false);
                 linkedTo.put("object", "node");
