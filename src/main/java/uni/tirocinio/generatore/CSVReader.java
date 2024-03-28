@@ -7,9 +7,10 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CSVReader {
     public static List<String> read(String path, String file) {
@@ -29,17 +30,21 @@ public class CSVReader {
             System.err.println("Errore nella lettura del file");
         }
 
-        String[] s = builder.toString().split("\"\"\"");
+        String fileText = builder.toString();
+        Pattern pattern = Pattern.compile("\"\"\"(.*?)\"\"\"", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(fileText);
 
-        list = new ArrayList<>(Arrays.asList(s));
-        list.remove(0);
-        list.removeIf(l -> l.isBlank());
+        list = new ArrayList<>();
+
+        while (matcher.find()) {
+            list.add(matcher.group(1));
+        }
 
         return Collections.unmodifiableList(list);
     }
 
     public static void main(String[] args) {
-        List<String> l = CSVReader.read("", "text.csv");
+        List<String> l = CSVReader.read("src/main/resources", "text.csv");
 
         System.out.println("Numero di vincolo letti: " + l.size());
 

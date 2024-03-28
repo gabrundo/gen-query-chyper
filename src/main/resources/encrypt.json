@@ -1,0 +1,72 @@
+{"sensitive-data": [
+    {
+        "description": {
+            "linked-to": {
+                "label": "Tweet",
+                "object": "node"
+            },
+            "list": false,
+            "type": "value",
+            "value": "RT @josepostiga: I've been messing around with graph databases, specifically @neo4j, and God damn there's so much potential in this for ass\u2026",
+            "key": "text"
+        },
+        "element": "property",
+        "sanitize": "encrypt"
+    },
+    {
+        "description": {
+            "linked-to": {
+                "label": "Tweet",
+                "object": "node"
+            },
+            "list": false,
+            "type": "value",
+            "value": "@jwolpert @ChillZoneInt @branarakic @guinnessstache @PunishedSpy01 @origin_trail @neo4j Greater the value of $TRAC.\u2026 https://t.co/xeWqrLuebt",
+            "key": "text"
+        },
+        "element": "property",
+        "sanitize": "encrypt"
+    },
+    {
+        "description": {
+            "linked-to": {
+                "label": "Tweet",
+                "object": "node"
+            },
+            "list": false,
+            "type": "value",
+            "value": "Der vollständig verwaltete #Graphdatenbank-as-a-Service @Neo4jDE Aura steht ab sofort auch in einer auf Großunterne\u2026 https://t.co/mvDp614B09",
+            "key": "text"
+        },
+        "element": "property",
+        "sanitize": "encrypt"
+    },
+    {
+        "description": {
+            "linked-to": {
+                "label": "Tweet",
+                "object": "node"
+            },
+            "list": false,
+            "type": "value",
+            "value": "@Neo4j Continues Exceptional Growth in 2020, Bolstered by Customer Wins, Mainstream Adoption and Community Expansio\u2026 https://t.co/cWruuPLU7K",
+            "key": "text"
+        },
+        "element": "property",
+        "sanitize": "encrypt"
+    },
+    {
+        "description": {
+            "linked-to": {
+                "label": "User",
+                "object": "node"
+            },
+            "list": false,
+            "type": "value",
+            "value": "3fd7ad610d1443a",
+            "key": "screen_name"
+        },
+        "element": "property",
+        "sanitize": "encrypt"
+    }
+]}

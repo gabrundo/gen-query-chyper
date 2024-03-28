@@ -10,6 +10,8 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
     private final StringBuilder sb;
     private String label;
     private char var;
+    private char varStart;
+    private char varEnd;
 
     public RelationshipGenerator() {
         sb = new StringBuilder();
@@ -47,13 +49,29 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
         String startLabel = description.getJSONObject("start").getString("label");
         String endLabel = description.getJSONObject("end").getString("label");
 
-        Character varStart = Character.toLowerCase(startLabel.charAt(0));
-        Character varEnd = Character.toLowerCase(endLabel.charAt(0));
+        varStart = Character.toLowerCase(startLabel.charAt(0));
+        varEnd = Character.toLowerCase(endLabel.charAt(0));
 
         // gestione di etichette di partenza e arrivo uguali
         if (varStart == varEnd) {
             varStart = 'x';
             varEnd = 'y';
+        }
+
+        if (varStart == var) {
+            var = 'x';
+            varStart = 'y';
+        }
+
+        if (varEnd == var) {
+            var = 'x';
+            varEnd = 'y';
+        }
+
+        if (varEnd == varStart && var == varStart) {
+            varStart = 'x';
+            var = 'y';
+            varEnd = 'z';
         }
 
         // MATCH (varStart:startLabel) -[var:label]-> (varEnd:endLabel)
@@ -62,12 +80,8 @@ public class RelationshipGenerator extends AbstractQueryGenerator {
     }
 
     private void generateSanitizePattern(JSONObject description, String mode) {
-        if (mode.equals("delete")) {
-            // DELETE var
-            sb.append(DELETE).append(' ').append(var).append('\n');
-        } else {
-            throw new IllegalArgumentException("Modalità di sanificazione non supportata");
-        }
+        // DELETE var
+        sb.append(DELETE).append(' ').append(var).append('\n');
     }
 
     private boolean canGenerateFromRelationship(String element) {

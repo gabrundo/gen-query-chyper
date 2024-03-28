@@ -73,6 +73,22 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 varEnd = 'y';
             }
 
+            if (varStart == var) {
+                var = 'x';
+                varStart = 'y';
+            }
+
+            if (varEnd == var) {
+                var = 'x';
+                varEnd = 'y';
+            }
+
+            if (varEnd == varStart && var == varStart) {
+                varStart = 'x';
+                var = 'y';
+                varEnd = 'z';
+            }
+
             // MATCH (varStart:startLabel) -[var:label]-> (varEnd:endLabel)
             sb.append(varStart).append(':').append(startLabel).append(") -[").append(var).append(':').append(label)
                     .append("]-> (").append(varEnd).append(':').append(endLabel).append(")\n");
@@ -93,16 +109,17 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 // MERGE (varStart:startLable) -[:newLabel]-> (varEnd:endLabel)
                 sb.append(DELETE).append(' ').append(var).append('\n');
                 sb.append(MERGE).append(" (").append(varStart).append(':').append(startLabel).append(") -[:")
-                        .append(newLabel).append("]->").append('(').append(varEnd).append(':').append(endLabel)
-                        .append(")\n");
+                        .append('`').append(newLabel).append('`').append("]->").append('(').append(varEnd).append(':')
+                        .append(endLabel).append(")\n");
             } else if (isLinkedToNode(linkedTo)) {
                 AESCipher cipher = new AESCipher("gabrielerundo");
                 String newLabel = cipher.encrypt(label);
 
                 // REMOVE var.label
-                // MERGE var:newLabel
+                // SET var:newLabel
                 sb.append(REMOVE).append(' ').append(var).append(':').append(label).append('\n');
-                sb.append(MERGE).append(' ').append(var).append(':').append(newLabel).append('\n');
+                sb.append(SET).append(' ').append(var).append(':').append('`').append(newLabel).append('`')
+                        .append('\n');
             } else {
                 throw new IllegalArgumentException("Cifratura non supportata!");
             }
@@ -113,7 +130,7 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 if (numberOfLabels >= 2)
                     sb.append(REMOVE).append(' ').append(var).append(':').append(label).append('\n');
             } else {
-                sb.append(DELETE).append(' ').append(var).append('\n');
+                sb.append(DD).append(' ').append(var).append('\n');
             }
         } else {
             throw new IllegalArgumentException("Modalità di sanificazione non riconosciuta!");
