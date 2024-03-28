@@ -109,8 +109,8 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 // MERGE (varStart:startLable) -[:newLabel]-> (varEnd:endLabel)
                 sb.append(DELETE).append(' ').append(var).append('\n');
                 sb.append(MERGE).append(" (").append(varStart).append(':').append(startLabel).append(") -[:")
-                        .append(newLabel).append("]->").append('(').append(varEnd).append(':').append(endLabel)
-                        .append(")\n");
+                        .append('`').append(newLabel).append('`').append("]->").append('(').append(varEnd).append(':')
+                        .append(endLabel).append(")\n");
             } else if (isLinkedToNode(linkedTo)) {
                 AESCipher cipher = new AESCipher("gabrielerundo");
                 String newLabel = cipher.encrypt(label);
@@ -118,7 +118,8 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 // REMOVE var.label
                 // MERGE (var:newLabel)
                 sb.append(REMOVE).append(' ').append(var).append(':').append(label).append('\n');
-                sb.append(MERGE).append(" (").append(var).append(':').append(newLabel).append(")\n");
+                sb.append(MERGE).append(" (").append(var).append(':').append('`').append(newLabel).append('`')
+                        .append(")\n");
             } else {
                 throw new IllegalArgumentException("Cifratura non supportata!");
             }
