@@ -134,7 +134,7 @@ public class PropertyGenerator extends AbstractQueryGenerator {
 
             sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
         } else {
-            throw new IllegalArgumentException("Modalità di cancellazione non supportata!");
+            throw new IllegalArgumentException("Modalità di sanificazione non supportata!");
         }
     }
 

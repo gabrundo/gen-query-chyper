@@ -116,10 +116,10 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 String newLabel = cipher.encrypt(label);
 
                 // REMOVE var.label
-                // MERGE (var:newLabel)
+                // SET var:newLabel
                 sb.append(REMOVE).append(' ').append(var).append(':').append(label).append('\n');
-                sb.append(MERGE).append(" (").append(var).append(':').append('`').append(newLabel).append('`')
-                        .append(")\n");
+                sb.append(SET).append(' ').append(var).append(':').append('`').append(newLabel).append('`')
+                        .append('\n');
             } else {
                 throw new IllegalArgumentException("Cifratura non supportata!");
             }
