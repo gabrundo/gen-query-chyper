@@ -14,7 +14,7 @@ public class App {
             String dbUri = "neo4j://localhost";
             String dbUser = "neo4j";
             String dbName = "twitter";
-            String dbPassword = "twitterdataset";
+            String dbPassword = "TwitterDataset";
 
             DatabaseConnection database = new DatabaseConnection(dbUri, dbUser, dbPassword);
 
@@ -22,9 +22,9 @@ public class App {
             long T = 0;
 
             Constraint constraint = new Constraint();
-            constraint.createConstraint("delete", N);
-            constraint.printFile("delete.json");
-            JsonReader reader = new JsonReader("delete.json");
+            constraint.createConstraint("encrypt", N);
+            constraint.printFile("encrypt.json");
+            JsonReader reader = new JsonReader("encrypt.json");
 
             for (JSONObject sensitiveData : reader) {
                 QueryGenerator relationshipGen = new RelationshipGenerator();
@@ -35,21 +35,12 @@ public class App {
                 labelGen.setNextGenerator(relationshipGen);
 
                 String query = propertyGen.generate(sensitiveData);
-
                 Map<String, Object> parameters = propertyGen.getParameters();
-
                 EagerResult result = database.execute(dbName, query, parameters);
 
                 T += result.summary().resultAvailableAfter(TimeUnit.MILLISECONDS);
-
-                if (result.summary().counters().containsUpdates()) {
-                    System.out.println("La query ha modificato il database");
-                } else {
-                    System.out.println("La query non ha modificato il database");
-                }
-
             }
-            System.out.printf("RECAP DI ESECUZIONE: \n --- T: %d, n: %d ---\n", T, N);
+            System.out.printf("RECAP DI ESECUZIONE: \n--- T: %d ms, n: %d ---\n", T, N);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
