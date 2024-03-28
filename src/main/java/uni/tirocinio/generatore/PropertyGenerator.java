@@ -106,8 +106,13 @@ public class PropertyGenerator extends AbstractQueryGenerator {
                 String newValue = cipher.encrypt(value.toString());
 
                 if (listOfValues) {
-                    // TODO: Cifratura di un valore in una lista
-                    sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
+                    // SET var.key = [x IN var.key WHERE x <> $value] + $new
+                    sb.append(SET).append(' ').append(var).append('.').append(key).append(" = [x ").append(IN)
+                            .append(' ').append(var).append('.').append(key).append(' ').append(WHERE)
+                            .append(" x <> $value] + $new");
+
+                    parameters.put("value", value);
+                    parameters.put("new", newValue);
                 } else {
                     // SET var.key = $new
                     sb.append(SET).append(' ').append(var).append('.').append(key).append(" = $new\n");
@@ -124,14 +129,10 @@ public class PropertyGenerator extends AbstractQueryGenerator {
                     sb.append(SET).append(' ').append(var).append('.').append(key).append(" = [x ").append(IN)
                             .append(' ').append(var).append('.').append(key).append(' ').append(WHERE)
                             .append(" x <> $value]\n");
-
-                    // valore già inserito perché tratto una lista
-                } else {
-                    sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
                 }
-            } else {
-                sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
             }
+
+            sb.append(REMOVE).append(' ').append(var).append('.').append(key).append('\n');
         } else {
             throw new IllegalArgumentException("Modalità di cancellazione non supportata!");
         }
