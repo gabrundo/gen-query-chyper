@@ -115,7 +115,7 @@ public class LabelGenerator extends AbstractQueryGenerator {
                 AESCipher cipher = new AESCipher("gabrielerundo");
                 String newLabel = cipher.encrypt(label);
 
-                // REMOVE var.label
+                // REMOVE var:label
                 // SET var:newLabel
                 sb.append(REMOVE).append(' ').append(var).append(':').append(label).append('\n');
                 sb.append(SET).append(' ').append(var).append(':').append('`').append(newLabel).append('`')
